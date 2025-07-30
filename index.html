@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>⏰ Timer Challenge ✨</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+
+    body {
+
+      background: #f7f4fd;
+
+      font-family: 'Inter', Arial, sans-serif;
+
+      margin: 0;
+
+      padding: 0;
+
+      min-height: 100vh;
+
+    }
+
+    .heading {
+
+      text-align: center;
+
+      margin-top: 38px;
+
+      font-size: 2rem;
+
+      font-weight: 800;
+
+      color: #232022;
+
+      letter-spacing: -.5px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+    }
+
+    .heading span {
+
+      font-size: .94rem;
+
+      font-weight: 400;
+
+      color: #444;
+
+      margin-top: 8px;
+
+      letter-spacing: 0;
+
+      margin-bottom: 18px;
+
+    }
+
+    .game-card {
+
+      max-width: 420px;
+
+      margin: 0 auto;
+
+      background: #fff;
+
+      border-radius: 26px;
+
+      box-shadow: 0 2px 16px 0 rgba(60,20,90,0.09);
+
+      padding: 2.2rem 1.3rem 2.1rem 1.3rem;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+    }
+
+    .timer-box {
+
+      width: 100%;
+
+      background: linear-gradient(90deg, #fbecf1 0%, #f3eafd 100%);
+
+      border-radius: 16px;
+
+      padding: 35px 0px 16px 0px;
+
+      margin-bottom: 10px;
+
+      margin-top: 8px;
+
+      box-sizing: border-box;
+
+      text-align: center;
+
+    }
+
+    .timer {
+
+      font-size: 2.9rem;
+
+      font-weight: bold;
+
+      color: #222236;
+
+      letter-spacing: 1px;
+
+      margin-bottom: 8px;
+
+    }
+
+    .target {
+
+      font-size: 1.15rem;
+
+      color: #a2a2b8;
+
+      margin-bottom: 5px;
+
+    }
+
+    .buttons {
+
+      display: flex;
+
+      justify-content: center;
+
+      gap: 13px;
+
+      margin-top: 24px;
+
+      margin-bottom: 2px;
+
+    }
+
+    .btn {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      font-size: 1.09rem;
+
+      font-weight: 600;
+
+      border: none;
+
+      border-radius: 8px;
+
+      padding: 13px 24px;
+
+      cursor: pointer;
+
+      transition: background 0.13s, transform 0.1s;
+
+      outline: none;
+
+      box-shadow: 0 2px 8px 0 rgba(70,30,110,0.06);
+
+    }
+
+    .btn:active { transform: scale(0.96);}
+
+    .btn-start { background: #27c94a; color: #fff; }
+
+    .btn-stop { background: #ea3030; color: #fff; }
+
+    .btn-retry { background: #1d75df; color: #fff; }
+
+    .btn svg {
+
+      margin-right: 8px;
+
+      height: 1.2em;
+
+      width: 1.2em;
+
+      vertical-align: middle;
+
+    }
+
+    .board-section {
+
+      max-width: 420px;
+
+      margin: 30px auto;
+
+      background: #fff;
+
+      border-radius: 16px;
+
+      box-shadow: 0 2px 16px 0 rgba(80,60,120,0.05);
+
+      padding: 1.2rem 1.3rem 1.3rem 1.3rem;
+
+      animation: fadein 1s;
+
+    }
+
+    .board-title {
+
+      font-size: 1.18rem;
+
+      font-weight: bold;
+
+      color: #232022;
+
+      margin-bottom: 13px;
+
+      letter-spacing: .1px;
+
+      text-align: center;
+
+    }
+
+    table.leaderboard {
+
+      width: 100%;
+
+      border-collapse: collapse;
+
+    }
+
+    .leaderboard th, .leaderboard td {
+
+      font-size: 1rem;
+
+      text-align: center;
+
+      padding: 6px 0;
+
+      border: none;
+
+    }
+
+    .leaderboard th {
+
+      color: #65697b;
+
+      font-weight: 600;
+
+      background: #f7f5ff;
+
+    }
+
+    .leaderboard tr:nth-child(odd) td {
+
+      background: #faf6fe;
+
+    }
+
+    .leaderboard .active-score {
+
+      font-weight: bold;
+
+      background: #d0ffdf !important;
+
+    }
+
+
+    @media (max-width: 540px) {
+
+      .heading {font-size: 1.2rem; margin-top: 6vw;}
+
+      .game-card {max-width: 99vw; margin: 0 1vw;}
+
+      .timer {font-size: 1.7rem;}
+
+      .timer-box {padding: 6vw 0 2.4vw 0;}
+
+      .btn {font-size: .97rem; padding: 3vw 4vw;}
+
+      .board-section {max-width:99vw; margin: 15vw 0 0;}
+
+      .leaderboard th, .leaderboard td {font-size: .93rem;}
+
+    }
+
+
+    @keyframes fadein {
+
+      from { opacity:0; transform:translateY(24px);}
+
+      to { opacity:1; transform:translateY(0);}
+
+    }
+
+
+    @keyframes floatUp {
+
+      from { transform: translateY(0); opacity: 1; }
+
+      to { transform: translateY(-120px); opacity: 0; }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="heading">
+
+    <span style="font-size:1.3em;">⏰ Timer Challenge ✨</span>
+
+    <span>Stop as close to 10.000 seconds as possible! 🎯</span>
+
+  </div>
+
+  <div class="game-card">
+
+    <div class="timer-box">
+
+      <div id="timer" class="timer">0.000s</div>
+
+      <div class="target">Target: 10.000s</div>
+
+    </div>
+
+    <div class="buttons">
+
+      <button class="btn btn-start" id="startBtn">
+
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="#fff" stroke-width="2" d="M7 6.89v10.22c0 .83.89 1.34 1.56.89l7.1-5.11a1 1 0 0 0 0-1.78l-7.1-5.11A1 1 0 0 0 7 6.9z"/></svg>
+
+        Start
+
+      </button>
+
+      <button class="btn btn-stop" id="stopBtn" disabled>
+
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" stroke="#fff" stroke-width="2"/></svg>
+
+        Stop
+
+      </button>
+
+      <button class="btn btn-retry" id="retryBtn" disabled>
+
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="#fff" stroke-width="2" d="M21 12a9 9 0 1 1-3.5-7M21 3v6h-6"/></svg>
+
+        Try Again
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="board-section">
+
+    <div class="board-title">🏆 Top 10 Scores</div>
+
+    <table class="leaderboard" id="leaderboard">
+
+      <thead>
+
+        <tr>
+
+          <th>Rank</th>
+
+          <th>Time (s)</th>
+
+          <th>Diff (ms)</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <!-- Leaderboard rows go here -->
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- Congrats Popup -->
+
+  <div id="congratsPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000; justify-content:center; align-items:center;">
+
+    <div style="background:#fff; border-radius:18px; padding:2rem 1.4rem; max-width:90%; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.2); position:relative;">
+
+      <div style="font-size:2rem; font-weight:bold; margin-bottom:10px;">🎉 Congratulations! 🎉</div>
+
+      <div style="font-size:1.2rem;">You set a new high score! 🌟</div>
+
+      <div id="flowerBurst" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    let timerElem = document.getElementById('timer');
+
+    let startBtn = document.getElementById('startBtn');
+
+    let stopBtn = document.getElementById('stopBtn');
+
+    let retryBtn = document.getElementById('retryBtn');
+
+
+    let startTime, timerInterval, running = false, elapsed = 0, scorePlaced = false;
+
+    const LB_KEY = "timerChallengeLeaderboard";
+
+    let lastScoreIndex = null;
+
+
+    function getLeaderboard() {
+
+      let lb = localStorage.getItem(LB_KEY);
+
+      if (!lb) return [];
+
+      try {
+
+        return JSON.parse(lb) || [];
+
+      } catch {
+
+        return [];
+
+      }
+
+    }
+
+
+    function saveLeaderboard(lb) {
+
+      localStorage.setItem(LB_KEY, JSON.stringify(lb));
+
+    }
+
+
+    function format(ms) {
+
+      return (ms / 1000).toFixed(3) + 's';
+
+    }
+
+
+    function showCongratsPopup() {
+
+      const popup = document.getElementById('congratsPopup');
+
+      const flowerBurst = document.getElementById('flowerBurst');
+
+      popup.style.display = 'flex';
+
+      flowerBurst.innerHTML = '';
+
+
+      for (let i = 0; i < 30; i++) {
+
+        const flower = document.createElement('div');
+
+        flower.textContent = ['🌸','🌼','🌺','💐','🌻'][Math.floor(Math.random() * 5)];
+
+        flower.style.position = 'absolute';
+
+        flower.style.left = `${Math.random() * 100}%`;
+
+        flower.style.top = `${Math.random() * 100}%`;
+
+        flower.style.fontSize = `${Math.random() * 24 + 16}px`;
+
+        flower.style.animation = `floatUp ${1.8 + Math.random()}s ease-out forwards`;
+
+        flower.style.opacity = 0;
+
+        flowerBurst.appendChild(flower);
+
+      }
+
+
+      setTimeout(() => {
+
+        popup.style.display = 'none';
+
+      }, 3500);
+
+    }
+
+
+    function updateLeaderboard(newScoreMs = null) {
+
+      const table = document.querySelector("#leaderboard tbody");
+
+      let leaderboard = getLeaderboard();
+
+
+      if (newScoreMs !== null) {
+
+        leaderboard.push(newScoreMs);
+
+        leaderboard = leaderboard.sort((a, b) =>
+
+          Math.abs(a - 10000) - Math.abs(b - 10000)
+
+        ).slice(0, 10);
+
+
+        lastScoreIndex = leaderboard.findIndex(v => v === newScoreMs);
+
+
+        // Show popup if new high score
+
+        if (lastScoreIndex === 0) {
+
+          showCongratsPopup();
+
+        }
+
+
+        saveLeaderboard(leaderboard);
+
+      } else {
+
+        lastScoreIndex = null;
+
+      }
+
+
+      table.innerHTML = "";
+
+      leaderboard.forEach((score, i) => {
+
+        let diff = Math.abs(score - 10000);
+
+        let tr = document.createElement('tr');
+
+        if (i === lastScoreIndex) tr.className = "active-score";
+
+        tr.innerHTML = `
+
+          <td>${i + 1}</td>
+
+          <td>${(score / 1000).toFixed(3)}</td>
+
+          <td>${diff}</td>
+
+        `;
+
+        table.appendChild(tr);
+
+      });
+
+
+      if (leaderboard.length === 0) {
+
+        table.innerHTML = `<tr><td colspan="3" style="color:#888;">No scores yet</td></tr>`;
+
+      }
+
+    }
+
+
+    function reset() {
+
+      timerElem.textContent = '0.000s';
+
+      startBtn.disabled = false;
+
+      stopBtn.disabled = true;
+
+      retryBtn.disabled = true;
+
+      timerElem.style.color = '#222236';
+
+      running = false;
+
+      elapsed = 0;
+
+      scorePlaced = false;
+
+    }
+
+
+    startBtn.onclick = function () {
+
+      startBtn.disabled = true;
+
+      stopBtn.disabled = false;
+
+      retryBtn.disabled = true;
+
+      running = true;
+
+      scorePlaced = false;
+
+      startTime = Date.now();
+
+      timerElem.style.color = '#222236';
+
+      timerInterval = setInterval(() => {
+
+        elapsed = Date.now() - startTime;
+
+        timerElem.textContent = format(elapsed);
+
+      }, 15);
+
+    };
+
+
+    stopBtn.onclick = function () {
+
+      if (!running) return;
+
+      running = false;
+
+      clearInterval(timerInterval);
+
+      scorePlaced = true;
+
+      timerElem.textContent = format(elapsed);
+
+      let diff = Math.abs(elapsed - 10000);
+
+      if (diff < 50) {
+
+        timerElem.style.color = '#27c94a';
+
+      } else if (diff < 150) {
+
+        timerElem.style.color = '#f6b600';
+
+      } else {
+
+        timerElem.style.color = '#ea3030';
+
+      }
+
+      startBtn.disabled = true;
+
+      stopBtn.disabled = true;
+
+      retryBtn.disabled = false;
+
+      updateLeaderboard(elapsed);
+
+    };
+
+
+    retryBtn.onclick = function () {
+
+      reset();
+
+      updateLeaderboard();
+
+    };
+
+
+    reset();
+
+    updateLeaderboard();
+
+  </script>
+
+</body>
+
+</html>
+
+
+
